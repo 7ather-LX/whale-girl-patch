@@ -17,7 +17,8 @@
 3. **重启并打开**：**完全退出启动器**（托盘图标右键退出）再打开——新的一栏「补丁」才会出现；
    只点启动器里的「重启」通常只重启内核。然后打开 <http://127.0.0.1:8787/patch/>。
 
-> 安装器只做三件事：复制 `patch\` 到 `鲸鲸目录\whale-patch\`、在 `server.js` 第一行加一行加载语句、生成 `data\whale-patch.json`。
+> 安装器主要做三件事：复制 `patch\` 到 `鲸鲸目录\whale-patch\`、在 `server.js` 第一行加一行加载语句、生成 `data\whale-patch.json`；
+> 本体版本匹配时，再额外装一栏「补丁」启动器（原文件自动备份）。
 > 卸载：双击 `uninstall.cmd`。
 > 卡住了看图文教程：[docs/tutorial.md](docs/tutorial.md)。
 
