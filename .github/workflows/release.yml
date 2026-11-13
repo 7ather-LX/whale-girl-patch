@@ -27,7 +27,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: whale-girl-patch-*.zip
-          body_path: docs/release-notes-v1.0.0.md
+          body_path: docs/release-notes-${{ github.ref_name }}.md
           draft: false
           prerelease: false
         env:

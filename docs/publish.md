@@ -51,7 +51,7 @@ README 首屏已经用 `> [!IMPORTANT]` 写明：
 
 - 用 `git archive` 打出 `whale-girl-patch-<tag>.zip`；
 - 创建/更新对应的 GitHub Release 并上传 ZIP；
-- 说明文字取 `docs/release-notes-v1.0.0.md`（以后发新版本时改成对应的 release notes 文件）。
+- 说明文字取 `docs/release-notes-<tag>.md`（例如 `docs/release-notes-v1.0.0.md`；发新版本时新建对应文件）。
 
 也可以手动生成 ZIP（在仓库目录）：
 
