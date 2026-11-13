@@ -1,6 +1,6 @@
 # 发布到 GitHub
 
-仓库已经初始化好（`main` 分支 + `v1.0.0` tag），只差一个远程地址和你的 GitHub 凭据。
+仓库已经初始化好（`main` 分支 + `v1.0.1` tag），只差一个远程地址和你的 GitHub 凭据。
 
 ## 1. 在 GitHub 上新建空仓库
 
@@ -51,20 +51,20 @@ README 首屏已经用 `> [!IMPORTANT]` 写明：
 
 - 用 `git archive` 打出 `whale-girl-patch-<tag>.zip`；
 - 创建/更新对应的 GitHub Release 并上传 ZIP；
-- 说明文字取 `docs/release-notes-<tag>.md`（例如 `docs/release-notes-v1.0.0.md`；发新版本时新建对应文件）。
+- 说明文字取 `docs/release-notes-<tag>.md`（例如 `docs/release-notes-v1.0.1.md`；发新版本时新建对应文件）。
 
 也可以手动生成 ZIP（在仓库目录）：
 
 ```powershell
-git archive --format=zip --output="..\whale-girl-patch-v1.0.0.zip" v1.0.0
+git archive --format=zip --output="..\whale-girl-patch-v1.0.1.zip" v1.0.1
 ```
 
 然后 GitHub → Releases → **Draft a new release**：
 
-- Tag：`v1.0.0`（选已有 tag）
-- Title：`v1.0.0 · 跨聊天记忆 + 链接阅读补丁`
-- 说明：直接粘贴 `docs/release-notes-v1.0.0.md` 的内容
-- 附件：上传 `whale-girl-patch-v1.0.0.zip`
+- Tag：`v1.0.1`（选已有 tag）
+- Title：`v1.0.1 · 跨聊天记忆 + 链接阅读补丁`
+- 说明：直接粘贴 `docs/release-notes-v1.0.1.md` 的内容
+- 附件：上传 `whale-girl-patch-v1.0.1.zip`
 
 这个 ZIP 里包含 `install.cmd` / `uninstall.cmd` / `patch\` / `launcher\`（带「补丁」页的启动器）/ 教程，
 解压双击即可。发布前确认 `launcher/version.txt` 与当前适配的本体版本一致。

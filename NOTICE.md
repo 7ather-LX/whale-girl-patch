@@ -23,8 +23,8 @@
 2. 在 `server.js` 顶部加一行 `require('./whale-patch').install();`。
 
 另外，**可选的启动器「补丁」页**修改了上游启动器源码（`launcher/`）：新增一个导航项和一个
-WebView2 页面。改动以 `launcher/launcher.patch` 形式提供，基于上游 `release/4.0.8.x`
-（commit `bdd39e3c22db759aa0c99938ffc60acc9cc44c76`），成品为 `launcher/WhaleLauncher.exe`。
+WebView2 页面。改动以 `launcher/launcher.patch` 形式提供，当前基于上游 `main` 4.1.0
+（commit `8d541f430622054f84b27c7b349f11a7afeb2a8e`），成品为 `launcher/WhaleLauncher.exe`。
 不安装这个可选组件时，启动器完全保持上游原样。
 
 补丁在运行时新增：

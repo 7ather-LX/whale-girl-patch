@@ -1,7 +1,7 @@
 # 图文安装教程
 
 > 先看这一句：**本补丁不能单独运行。**
-> 必须先安装 **鲸鲸 / Whale Girl 4.0.x**：<https://github.com/Banan1cee/whale_girl>
+> 必须先安装 **鲸鲸 / Whale Girl 4.0.x / 4.1.0**：<https://github.com/Banan1cee/whale_girl>
 > 单独下载本仓库，双击任何文件都不会出现一个「AI 软件」——它只是给鲸鲸加功能的补丁。
 
 ---
@@ -10,7 +10,7 @@
 
 | 东西 | 说明 | 地址 |
 | --- | --- | --- |
-| 基础软件：鲸鲸 / Whale Girl 4.0.x | 带启动器、微信桥接、模型配置的完整软件 | <https://github.com/Banan1cee/whale_girl> |
+| 基础软件：鲸鲸 / Whale Girl 4.0.x / 4.1.0 | 带启动器、微信桥接、模型配置的完整软件 | <https://github.com/Banan1cee/whale_girl> |
 | 本补丁 | 跨聊天记忆 + 链接阅读 | 本仓库的 **Releases / Code → Download ZIP** |
 | Windows 10/11 | 补丁只支持 Windows | — |
 | 可选：看图模型 Key | 想让 B 站链接「看封面/画面」才需要；不配也能用 | 在鲸鲸设置里配，默认智谱有免费额度 |
@@ -25,7 +25,7 @@
 ## 1. 先装好基础软件（鲸鲸）
 
 1. 打开 <https://github.com/Banan1cee/whale_girl>；
-2. 按它的 README / Releases 安装鲸鲸 4.0.x；
+2. 按它的 README / Releases 安装鲸鲸（4.0.8.2 或 4.1.0）；
 3. 打开启动器，确认能：
    - 正常启动（状态页没有红色报错）；
    - 配置好一个模型（DeepSeek / 智谱 / Ollama 都行）；
@@ -63,7 +63,7 @@ install.cmd
 3. 找不到时会弹出一个**选择文件夹**的窗口：
    - 选**鲸鲸安装目录**，也就是包含 `server.js`、`src`、`runtime` 的那个文件夹；
    - 不要选补丁文件夹；
-4. 如果本体是 4.0.8.2，最后一步会给启动器加一栏「补丁」（替换前自动备份）；
+4. 如果本体是 4.0.8.2 或 4.1.0，最后一步会给启动器加一栏「补丁」（替换前自动备份）；
 5. 看到 `Installed successfully.` 就成功了。
 
 安装器实际做这些事：

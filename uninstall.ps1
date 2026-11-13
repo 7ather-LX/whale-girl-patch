@@ -1,4 +1,4 @@
-﻿# WhaleGirl patch uninstaller
+# WhaleGirl patch uninstaller
 #
 # Easiest: double-click uninstall.cmd (it calls this script).
 # Manual:
@@ -128,6 +128,7 @@ if ($PurgeData) {
 # 还原被替换的启动器（如果装过「补丁」页）
 $launcher = Join-Path $AppRoot "WhaleLauncher.exe"
 $launcherBackup = "$launcher.whale-patch.bak"
+$launcherMarker = "$launcher.whale-patch.installed"
 if (Test-Path $launcherBackup) {
   try {
     Copy-Item $launcherBackup $launcher -Force -ErrorAction Stop
@@ -145,6 +146,7 @@ if (Test-Path $launcherBackup) {
     }
   }
 }
+if (Test-Path $launcherMarker) { Remove-Item $launcherMarker -Force -ErrorAction SilentlyContinue }
 
 Write-Host ""
 Write-Host "Done. Restart WhaleGirl from the launcher." -ForegroundColor Green

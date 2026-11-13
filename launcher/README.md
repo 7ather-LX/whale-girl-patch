@@ -2,12 +2,13 @@
 
 这个目录里是给鲸鲸启动器加一栏「补丁」的成品：
 
-- `WhaleLauncher.exe`：编译好的启动器（基于上游 **4.0.8.2**）；
+- `WhaleLauncher.exe`：编译好的启动器（基于上游 **4.1.0**）；
 - `launcher.patch`：相对上游源码的全部改动（新增补丁页 + 导航项 + WebView2 依赖）；
 - `version.txt`：这份二进制对应的本体版本，安装器据此决定装不装。
 
-> 上游源码：<https://github.com/Banan1cee/whale_girl>，分支 `release/4.0.8.x`，
-> 对应 commit `bdd39e3c22db759aa0c99938ffc60acc9cc44c76`。
+> 上游源码：<https://github.com/Banan1cee/whale_girl>，`main` 分支，
+> 对应 commit `8d541f430622054f84b27c7b349f11a7afeb2a8e`（4.1.0）。
+> 4.0.8.2 的构建来自 `release/4.0.8.x`，见历史版本 tag。
 
 ## 它是什么
 
@@ -34,7 +35,7 @@
 需要 .NET 10 SDK、Windows。
 
 ```powershell
-git clone --branch release/4.0.8.x https://github.com/Banan1cee/whale_girl.git whale_girl
+git clone --branch main https://github.com/Banan1cee/whale_girl.git whale_girl
 cd whale_girl
 git apply "C:\path\to\whale-girl-patch\launcher\launcher.patch"
 

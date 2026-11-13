@@ -222,7 +222,10 @@ if ($SkipLauncher) {
     Info "after the base updates, re-run install.cmd when a matching launcher build is released"
   } else {
     $launcherBackup = "$launcherDst.whale-patch.bak"
-    if (-not (Test-Path $launcherBackup)) {
+    $launcherMarker = "$launcherDst.whale-patch.installed"
+    $markerVersion = ""
+    if (Test-Path $launcherMarker) { $markerVersion = (Get-Content $launcherMarker -Raw).Trim() }
+    if (-not $markerVersion -or $markerVersion -ne [string]$pkg.version) {
       try { Copy-Item $launcherDst $launcherBackup -Force -ErrorAction Stop; Info "launcher backup: $launcherBackup" }
       catch { Info "could not back up launcher: $($_.Exception.Message)" }
     }
@@ -245,7 +248,10 @@ if ($SkipLauncher) {
         Info "close WhaleGirl completely and run install.cmd again to enable the tab"
       }
     }
-    if ($installed) { Info "launcher tab installed (restart WhaleGirl to see it)" }
+    if ($installed) {
+      try { Set-Content -Path $launcherMarker -Value ([string]$pkg.version) -Encoding ASCII } catch { }
+      Info "launcher tab installed (restart WhaleGirl to see it)"
+    }
   }
 }
 
