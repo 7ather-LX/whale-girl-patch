@@ -17,10 +17,11 @@
 
 ## 安装（3 步）
 
-1. 从 <https://github.com/Banan1cee/whale_girl> 安装鲸鲸 4.0.x，确认能正常启动、登录微信；
+1. 从 <https://github.com/Banan1cee/whale_girl> 安装鲸鲸 4.0.x（当前补丁适配 **4.0.8.2**），确认能正常启动、登录微信；
 2. 下载本 Release 的 `whale-girl-patch-v1.0.0.zip`，解压，双击 `install.cmd`
    （安装器会自动找鲸鲸目录；找不到会弹窗让你选包含 `server.js` 的文件夹）；
-3. 启动器「停止 → 启动」，打开 <http://127.0.0.1:8787/patch/>。
+3. **完全退出启动器**（托盘右键退出）再打开——左侧会多一栏「补丁」；
+   也可以直接打开 <http://127.0.0.1:8787/patch/>。
 
 详细图文教程：仓库里的 `docs/tutorial.md`（安装、配置、常见问题、卸载）。
 
