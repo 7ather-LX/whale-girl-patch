@@ -1,0 +1,34 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build release ZIP
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          git archive --format=zip --output="whale-girl-patch-${TAG}.zip" "${GITHUB_SHA}"
+          ls -lh whale-girl-patch-*.zip
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: whale-girl-patch-*.zip
+          body_path: docs/release-notes-v1.0.0.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

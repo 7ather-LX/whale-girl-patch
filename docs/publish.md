@@ -47,7 +47,13 @@ README 首屏已经用 `> [!IMPORTANT]` 写明：
 
 ## 4. 建 Release（安装包）
 
-先重新生成 ZIP（在仓库目录）：
+推送 tag 后，仓库里的 GitHub Actions（`.github/workflows/release.yml`）会自动：
+
+- 用 `git archive` 打出 `whale-girl-patch-<tag>.zip`；
+- 创建/更新对应的 GitHub Release 并上传 ZIP；
+- 说明文字取 `docs/release-notes-v1.0.0.md`（以后发新版本时改成对应的 release notes 文件）。
+
+也可以手动生成 ZIP（在仓库目录）：
 
 ```powershell
 git archive --format=zip --output="..\whale-girl-patch-v1.0.0.zip" v1.0.0
