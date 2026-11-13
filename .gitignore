@@ -1,0 +1,17 @@
+# 补丁自己的配置和缓存
+data/
+*.log
+*.tmp
+*.bak
+
+# 测试 / 临时
+.tmp/
+tmp/
+node_modules/
+*.zip
+
+# 编辑器
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>鲸鲸补丁 · 跨聊天记忆与链接阅读</title>
+  <link rel="stylesheet" href="/patch/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="logo">🐋</span>
+      <div>
+        <h1>鲸鲸补丁</h1>
+        <p class="sub">跨聊天记忆互通 · 点开链接看网页 / 视频</p>
+      </div>
+    </div>
+    <div class="top-right">
+      <span id="version" class="pill">加载中…</span>
+      <a class="pill link" href="/patch/" id="reload">刷新</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="card" id="status-card">
+      <div class="card-head">
+        <h2>运行状态</h2>
+        <span class="hint">补丁只在本机运行；下面的改动保存后立即生效，不用重启鲸鲸。</span>
+      </div>
+      <div id="status-chips" class="chips"></div>
+      <p id="status-error" class="error hidden"></p>
+    </section>
+
+    <section class="card" id="shared-card">
+      <div class="card-head">
+        <h2>跨聊天记忆</h2>
+        <label class="switch">
+          <input type="checkbox" id="shared-enabled">
+          <span>总开关</span>
+        </label>
+      </div>
+      <p class="hint">
+        把几个群 / 私聊放进同一个「共享组」，她在组内就能接着别处的记忆聊。
+        只读不复制：原来的记忆文件互不影响，退出共享立刻恢复各聊各的。
+      </p>
+
+      <div class="row">
+        <label class="field small">
+          <span>每组最多引用聊天数</span>
+          <input type="number" id="shared-max-siblings" min="1" max="12" step="1">
+        </label>
+        <label class="field small">
+          <span>最近原话条数</span>
+          <input type="number" id="shared-max-lines" min="0" max="20" step="1">
+        </label>
+        <label class="field small">
+          <span>记忆块 token 上限</span>
+          <input type="number" id="shared-max-tokens" min="80" max="1200" step="10">
+        </label>
+        <button class="btn" id="shared-save">保存记忆设置</button>
+      </div>
+
+      <div class="scopes-head">
+        <h3>共享组</h3>
+        <div class="row tight">
+          <button class="btn ghost small" id="scope-add">＋ 新建共享组</button>
+          <button class="btn ghost small" id="scope-groups">把所有群聊放进一组</button>
+          <button class="btn ghost small" id="scope-privates">把所有私聊放进一组</button>
+        </div>
+      </div>
+      <div id="scopes" class="scopes"></div>
+      <p class="empty hidden" id="scopes-empty">还没有共享组。点「新建共享组」，勾选要互通的聊天即可。</p>
+
+      <div class="preview">
+        <h3>先看看她能看到什么</h3>
+        <div class="row">
+          <label class="field">
+            <span>假装正在这个聊天里说话</span>
+            <select id="preview-chat"></select>
+          </label>
+          <label class="field grow">
+            <span>当前这句话（用来找相关记忆，可留空）</span>
+            <input type="text" id="preview-query" placeholder="例如：刚才说的那个游戏叫什么来着">
+          </label>
+          <button class="btn ghost" id="preview-run">预览共享记忆</button>
+        </div>
+        <pre id="preview-out" class="out hidden"></pre>
+      </div>
+    </section>
+
+    <section class="card" id="links-card">
+      <div class="card-head">
+        <h2>链接阅读</h2>
+        <label class="switch">
+          <input type="checkbox" id="links-enabled">
+          <span>总开关</span>
+        </label>
+      </div>
+      <p class="hint">
+        B 站走公开接口（标题 / UP 主 / 简介 / 标签 / 高赞评论）；小黑盒、微博这类必须执行 JS 的页面，
+        用系统自带 Edge / Chrome 的无头模式打开。只读公网 http(s)，内网地址和带账号密码的链接一律拒绝。
+      </p>
+
+      <div class="grid2">
+        <label class="field">
+          <span>网页渲染</span>
+          <select id="links-browser">
+            <option value="auto">自动（有 Edge / Chrome 就用）</option>
+            <option value="off">关闭（只读静态网页 / B 站接口）</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>超时（毫秒）</span>
+          <input type="number" id="links-timeout" min="3000" max="25000" step="500">
+        </label>
+        <label class="field">
+          <span>缓存（分钟）</span>
+          <input type="number" id="links-cache" min="1" max="1440" step="5">
+        </label>
+        <label class="field">
+          <span>视频画面（需要配置看图模型）</span>
+          <select id="links-vision">
+            <option value="true">看封面 + 抽样画面</option>
+            <option value="false">只看文字</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>每次最多看几张图</span>
+          <input type="number" id="links-vision-max" min="0" max="5" step="1">
+        </label>
+      </div>
+
+      <div class="grid2">
+        <label class="field">
+          <span>允许启动浏览器的域名（每行一个）</span>
+          <textarea id="links-browser-domains" rows="5" spellcheck="false"></textarea>
+        </label>
+        <label class="field">
+          <span>永不打开的域名（每行一个，黑名单）</span>
+          <textarea id="links-deny" rows="5" spellcheck="false"></textarea>
+        </label>
+      </div>
+      <label class="field">
+        <span>只读这些域名（每行一个；留空 = 不限制，仍会拦截内网地址）</span>
+        <textarea id="links-allow" rows="3" spellcheck="false"></textarea>
+      </label>
+      <div class="row">
+        <button class="btn" id="links-save">保存链接设置</button>
+        <button class="btn ghost" id="cache-clear">清空链接缓存</button>
+      </div>
+
+      <div class="preview">
+        <h3>试读一个链接</h3>
+        <div class="row">
+          <input type="text" id="test-url" class="grow" placeholder="https://www.bilibili.com/video/BV... 或 https://xiaoheihe.cn/app/bbs/link/...">
+          <button class="btn ghost" id="test-run">读取</button>
+        </div>
+        <p class="hint" id="test-meta"></p>
+        <pre id="test-out" class="out hidden"></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>诊断</h2></div>
+      <div id="diag" class="diag"></div>
+    </section>
+
+    <footer class="foot">
+      <p>基于 <a href="https://github.com/Banan1cee/whale_girl" target="_blank" rel="noreferrer">鲸鲸 / Whale Girl</a> 的补丁，遵循 AGPL-3.0-only。补丁源码随安装包一起提供。</p>
+      <p id="config-path" class="mono"></p>
+    </footer>
+  </main>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+  <script src="/patch/app.js"></script>
+</body>
+</html>
