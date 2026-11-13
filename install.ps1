@@ -102,7 +102,7 @@ function Pick-AppRoot {
 Write-Host ""
 Write-Host "WhaleGirl patch installer" -ForegroundColor Cyan
 Write-Host "  This is a PATCH. It cannot run on its own." -ForegroundColor Yellow
-Write-Host "  Base software: WhaleGirl 4.0.x"
+Write-Host "  Base software: WhaleGirl 4.0.x / 4.1.0"
 Write-Host "  https://github.com/Banan1cee/whale_girl"
 Write-Host ""
 
