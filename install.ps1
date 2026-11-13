@@ -1,4 +1,4 @@
-﻿# WhaleGirl patch installer (Windows PowerShell 5.1+ / PowerShell 7)
+# WhaleGirl patch installer (Windows PowerShell 5.1+ / PowerShell 7)
 #
 # IMPORTANT: this is a PATCH, not a standalone application.
 # It only works after WhaleGirl / 鲸鲸 is installed:
@@ -259,7 +259,8 @@ if (Test-Path $portFile) {
 Write-Host ""
 Write-Host "Installed successfully." -ForegroundColor Green
 Write-Host ""
-Write-Host "  Last step: open the WhaleGirl launcher, click Stop, then Start." -ForegroundColor Yellow
+Write-Host "  Last step: FULLY EXIT the WhaleGirl launcher (tray icon -> Exit), then open it again." -ForegroundColor Yellow
+Write-Host "  A normal 'Restart' only restarts the kernel; the new 'Patch' tab needs a launcher restart."
 Write-Host "  Then open:  http://127.0.0.1:$port/patch/"
 Write-Host ""
 Write-Host "  Self-check: `"$node`" `"$(Join-Path $dstPatch 'cli.js')`" doctor"
