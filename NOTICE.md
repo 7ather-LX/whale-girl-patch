@@ -17,10 +17,15 @@
 
 ## 2. 本补丁做了哪些修改
 
-**没有修改**鲸鲸原有业务源码（`src/` 下的文件保持上游原样）。安装器只做了两件事：
+**没有修改**鲸鲸原有服务端业务源码（`src/` 下的文件保持上游原样）。安装器只做了两件事：
 
 1. 把 `patch/` 复制为鲸鲸目录下的 `whale-patch/`；
 2. 在 `server.js` 顶部加一行 `require('./whale-patch').install();`。
+
+另外，**可选的启动器「补丁」页**修改了上游启动器源码（`launcher/`）：新增一个导航项和一个
+WebView2 页面。改动以 `launcher/launcher.patch` 形式提供，基于上游 `release/4.0.8.x`
+（commit `bdd39e3c22db759aa0c99938ffc60acc9cc44c76`），成品为 `launcher/WhaleLauncher.exe`。
+不安装这个可选组件时，启动器完全保持上游原样。
 
 补丁在运行时新增：
 
@@ -42,6 +47,8 @@
 | 组件 | 位置 / 使用方式 | 许可与说明 |
 | --- | --- | --- |
 | 鲸鲸 / Whale Girl | 运行时依赖 | AGPL-3.0-only；上游作者 @Banan1cee |
+| 鲸鲸启动器（修改版） | `launcher/WhaleLauncher.exe` | 基于上游 `release/4.0.8.x` 源码修改，AGPL-3.0-only；源码改动见 `launcher/launcher.patch` |
+| Microsoft WebView2 | 启动器「补丁」页 | Microsoft 许可；NuGet `Microsoft.Web.WebView2`，运行时由系统 Edge WebView2 Runtime 提供 |
 | Microsoft Edge / Google Chrome | 由用户系统提供，补丁只调用其无头模式 | 各自许可；补丁不打包、不分发浏览器 |
 | Pillow (PIL) | 鲸鲸安装包自带的 `runtime/python` 内 | HPND / PIL Software License；只用于裁视频故事板 |
 | Bilibili 公开接口 | 运行时访问 `api.bilibili.com` | 接口归哔哩哔哩所有；补丁只读取公开信息，不绕过登录 |

@@ -32,8 +32,16 @@
   - 共享记忆预览、链接试读、诊断信息；
   - 仅本机访问，写操作 JSON + 同源检查。
 
+- **启动器「补丁」页（可选，适配 4.0.8.2）**
+  - 基于上游 `release/4.0.8.x` 源码 + WebView2，左侧导航新增「补丁」；
+  - 嵌入同一个 `/patch/` 控制台，带自动重连、在浏览器打开、刷新；
+  - 安装器自动备份/替换启动器，卸载还原；本体更新后重跑 `install.cmd` 恢复；
+  - 源码改动见 `launcher/launcher.patch`，构建说明见 `launcher/README.md`。
+
 - **运维**
+  - `install.cmd` / `uninstall.cmd`：双击即装，自动寻找鲸鲸目录，找不到弹窗选文件夹；
   - `install.ps1` / `uninstall.ps1`：备份 `server.js`、加/删一行挂钩、语法检查；
+  - 图文教程 `docs/tutorial.md`；README 首屏明确「不能单独运行 + 基础软件下载地址」；
   - `whale-patch/cli.js doctor | status | test-link | share-list`；
   - 单元测试 32 项 + 临时目录集成探针。
 

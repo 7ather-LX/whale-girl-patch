@@ -1,9 +1,34 @@
 # 鲸鲸补丁 · 跨聊天记忆与链接阅读
 
-> 给 [鲸鲸 / Whale Girl](https://github.com/Banan1cee/whale_girl)（微信 AI 聊天机器人，AGPL-3.0-only）做的外挂补丁：
-> **让指定聊天之间记忆互通**，并且**真的能点开群友发的链接**（B 站、小黑盒等）看内容。
->
-> 不改鲸鲸的业务源码，只在 `server.js` 顶部加一行 `require('./whale-patch').install()`；卸载删掉补丁目录和这一行即可。
+> [!IMPORTANT]
+> **这不是独立软件，单独下载本仓库没有任何作用。**
+> 本仓库是 [鲸鲸 / Whale Girl](https://github.com/Banan1cee/whale_girl) 的外挂补丁，必须先安装基础软件：
+> **<https://github.com/Banan1cee/whale_girl>**（Windows，4.0.x）。
+> 补丁不自带模型、不自带微信自动化、没有独立界面；它只给已经装好的鲸鲸加两个能力。
+
+**一句话**：让鲸鲸在指定聊天之间记忆互通，并且能点开群友发的 B 站 / 小黑盒 / 网页链接看内容；
+装好后启动器左侧会多一栏 **「补丁」**，网页控制台在 `http://127.0.0.1:8787/patch/`。
+
+## 30 秒安装（3 步）
+
+1. **先装基础软件**：从 <https://github.com/Banan1cee/whale_girl> 安装鲸鲸 4.0.x，确认能从启动器正常启动、登录微信。
+2. **装补丁**：下载本仓库 ZIP → 解压 → 双击 `install.cmd`。
+   安装器会自动找鲸鲸目录；找不到会弹窗让你选——选**包含 `server.js` 的那个文件夹**（不是补丁文件夹）。
+3. **重启并打开**：在启动器点「停止」→「启动」，然后打开 <http://127.0.0.1:8787/patch/>。
+
+> 安装器只做三件事：复制 `patch\` 到 `鲸鲸目录\whale-patch\`、在 `server.js` 第一行加一行加载语句、生成 `data\whale-patch.json`。
+> 卸载：双击 `uninstall.cmd`。
+> 卡住了看图文教程：[docs/tutorial.md](docs/tutorial.md)。
+
+## 它是什么 / 不是什么
+
+| 是 | 不是 |
+| --- | --- |
+| 鲸鲸的**外挂补丁**，给已安装的鲸鲸加功能 | ❌ 不能单独运行的软件 |
+| 给启动器加一栏「补丁」（本体 4.0.8.2 可选组件） | ❌ 不会替换/重装鲸鲸本体 |
+| 只改 `server.js` 第一行，其余代码原样保留 | ❌ 不需要再装 Node、Python、数据库 |
+| 零 npm 依赖，用鲸鲸自带的 Node / Python | ❌ 不是云服务，不上传聊天记录 |
+| 管理页只在本机 `127.0.0.1` 访问 | ❌ 不暴露公网 |
 
 ![补丁管理页](docs/patch-ui.png)
 
@@ -52,31 +77,48 @@
 ### 前置条件
 
 - Windows 10/11；
-- 已安装鲸鲸 4.0.x（安装目录里能看到 `server.js`、`src\`、`runtime\`）；
+- 已安装鲸鲸 4.0.x（安装目录里能看到 `server.js`、`src\`、`runtime\`）：
+  **<https://github.com/Banan1cee/whale_girl>**；
 - 小黑盒这类动态页需要系统里有 **Microsoft Edge**（Win10/11 自带）或 Chrome；
 - 想让链接「看视频画面」，需要在鲸鲸里配好**看图模型**的 Key（默认智谱 `glm-4.6v-flash` 有免费额度）。
 
-### 一键安装
+### 一键安装（推荐）
 
-1. 下载本仓库（Code → Download ZIP），解压到任意目录；
-2. 在解压目录打开 PowerShell，执行：
+1. 下载本仓库 ZIP，**解压到任意目录**（不要在压缩包里直接运行）；
+2. 双击 `install.cmd`；
+3. 安装器自动检测鲸鲸目录；检测不到会弹窗，选包含 `server.js` 的文件夹；
+4. 看到 `Installed successfully` 后，从启动器**停止 → 启动**鲸鲸；
+5. 打开 <http://127.0.0.1:8787/patch/>（端口以启动器 / `data\server-port.txt` 为准）。
+
+安装器会备份 `server.js`（`server.js.whale-patch.bak`），然后复制补丁、加一行挂钩、做语法检查、生成配置。
+重复运行 `install.cmd` 就是更新补丁，不会重复加挂钩。
+
+如果本体正好是 **4.0.8.2**，安装器还会给启动器加一栏 **「补丁」**（替换前备份
+`WhaleLauncher.exe.whale-patch.bak`）。启动器重启后，左侧最后一项就是「补丁」，
+里面和网页控制台是同一套功能。
+
+> 本体更新后，`server.js` 的挂钩和启动器可能被官方覆盖：**重新运行一次 `install.cmd`** 即可，
+> 补丁配置和聊天记忆不会丢。详见 [docs/updates.md](docs/updates.md)。
+
+默认只启用「全部群聊」共享组，私聊组停用；想改就到管理页 / 启动器「补丁」页里勾选。
+
+### 命令行安装（可选）
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -AppRoot "D:\WhaleGirl"
 ```
 
-3. 安装器会：备份 `server.js` → 复制 `patch\` 到 `鲸鲸目录\whale-patch\` → 在 `server.js` 顶部加一行挂钩 →
-   语法检查 → 生成 `data\whale-patch.json`；
-4. **从启动器重启鲸鲸**（停止 → 启动），让 `server.js` 重新加载；
-5. 打开补丁管理页：<http://127.0.0.1:8787/patch/>（端口以启动器 / `data\server-port.txt` 为准）。
-
-想装完就默认「全部聊天互通」，加一个参数：
+想装完就默认「全部群聊互通」：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -AppRoot "D:\WhaleGirl" -EnableAllShared
 ```
 
-> 默认不会自动开启共享记忆：哪些聊天能互相看，应该由你自己在管理页里勾选。
+不想替换启动器（只用网页控制台）：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -AppRoot "D:\WhaleGirl" -SkipLauncher
+```
 
 ### 手动安装（不想跑脚本）
 
@@ -199,6 +241,11 @@ whale-patch/
     reader.js           总调度 + 缓存 + 看图
     crop_frames.py      用 Pillow 裁视频故事板
   web/                  管理页（原生 HTML/CSS/JS，无 CDN）
+
+launcher/               启动器「补丁」页（可选，当前只适配 4.0.8.2）
+  WhaleLauncher.exe     已编译启动器（含「补丁」导航）
+  launcher.patch        相对上游 release/4.0.8.x 的源码改动
+  version.txt           这份二进制对应的本体版本
 ```
 
 ---
@@ -219,9 +266,18 @@ whale-patch/
 - 小黑盒 / 微博 / 知乎 / 抖音 / 小红书在**登录墙 / 风控**下可能只拿到标题；补丁不会尝试登录。
 - 无头浏览器渲染一次通常 3–10 秒；第一次读某站会慢一些，之后走缓存。
 - 看图模型需要单独配 Key；没配也能用，只是不看视频画面。
-- 只测过 Windows + 鲸鲸 4.0.x；鲸鲸大版本升级后请先跑 `cli.js doctor`。
+- 启动器「补丁」页是**可选组件**，只为适配的本体版本构建（当前 4.0.8.2）；本体升级后
+  如果还没有对应的启动器构建，就先用网页控制台，功能一样。
+- 只测过 Windows + 鲸鲸 4.0.x；鲸鲸大版本升级后请先跑 `cli.js doctor`，并重新运行 `install.cmd`。
 
 ## 卸载
+
+双击 `uninstall.cmd`（安装器会自动找鲸鲸目录；找不到会弹窗让你选）。
+
+会删除补丁、`server.js` 顶部挂钩，并把启动器还原成安装前的备份
+（`WhaleLauncher.exe.whale-patch.bak`）。
+
+也可以命令行：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\uninstall.ps1 -AppRoot "D:\WhaleGirl"
@@ -257,6 +313,7 @@ $env:WHALE_APP_ROOT = "D:\WhaleGirl"
 > 基于鲸鲸 / Whale Girl（作者 [@Banan1cee](https://github.com/Banan1cee)，<https://github.com/Banan1cee/whale_girl>）修改。
 
 本补丁的修改点：新增跨聊天记忆共享、增强链接阅读 / 视频画面读取、补充管理页与安全策略；
-**未修改**鲸鲸原有业务源码（只在 `server.js` 顶部加一行加载挂钩）。
+**未修改**鲸鲸原有服务端业务源码（只在 `server.js` 顶部加一行加载挂钩）。
+可选的启动器「补丁」页改了上游启动器源码，改动以 `launcher/launcher.patch` 提供；不装这个组件时启动器保持原样。
 
 如果你分发本补丁或让用户通过网络使用，请按 AGPL-3.0 提供完整对应源代码。

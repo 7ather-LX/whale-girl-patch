@@ -1,6 +1,6 @@
 # 发布到 GitHub
 
-仓库已经初始化好（`main` 分支 + `v1.0.0` tag），只差一个远程地址和你的 GitHub 登录。
+仓库已经初始化好（`main` 分支 + `v1.0.0` tag），只差一个远程地址和你的 GitHub 凭据。
 
 ## 1. 在 GitHub 上新建空仓库
 
@@ -25,17 +25,45 @@ git remote add origin https://github.com/<你的用户名>/whale-girl-patch.git
 git push -u origin main --tags
 ```
 
-第一次推送会弹出 GitHub 登录（浏览器授权），按提示登录即可。
-如果机器上没有 `git`，可以用 GitHub Desktop：Add local repository → 选择本目录 → Publish repository。
+> 浏览器里登录 GitHub **不等于** git 有推送权限。HTTPS 弹密码时要填
+> **Personal Access Token（至少 repo 权限）**；或者把 `~/.ssh/id_ed25519.pub`
+> 加到 GitHub → Settings → SSH keys，再把 remote 换成
+> `git@github.com:<用户名>/whale-girl-patch.git`。
+> 也可以直接用 GitHub Desktop：Add local repository → 选择本目录 → Publish repository。
 
-## 3. 建议补充的仓库信息
+## 3. 仓库信息（很重要，别让人误以为这是独立软件）
 
-- **About**：`鲸鲸 / Whale Girl 补丁：跨聊天记忆共享 + B站/小黑盒链接与视频阅读`
-- **Topics**：`whale-girl` `wechat-bot` `llm` `memory` `bilibili` `xiaoheihe` `agpl`
-- **Releases**：用 tag `v1.0.0` 建一个 Release，附上 `whale-girl-patch-v1.0.0.zip`
-  （由 `git archive` 生成，不含 `.git` 和测试数据）。
+**About** 填：
 
-## 4. 发布前检查
+```text
+鲸鲸 / Whale Girl 的外挂补丁：跨聊天记忆共享 + B站/小黑盒链接与视频阅读，装好后启动器多一栏「补丁」。必须先安装基础软件 https://github.com/Banan1cee/whale_girl
+```
+
+**Topics**：`whale-girl` `wechat-bot` `llm` `memory` `bilibili` `xiaoheihe` `agpl`
+
+README 首屏已经用 `> [!IMPORTANT]` 写明：
+
+> 这不是独立软件，单独下载没有作用；必须先安装鲸鲸 4.0.x（附基础软件地址）。
+
+## 4. 建 Release（安装包）
+
+先重新生成 ZIP（在仓库目录）：
+
+```powershell
+git archive --format=zip --output="..\whale-girl-patch-v1.0.0.zip" v1.0.0
+```
+
+然后 GitHub → Releases → **Draft a new release**：
+
+- Tag：`v1.0.0`（选已有 tag）
+- Title：`v1.0.0 · 跨聊天记忆 + 链接阅读补丁`
+- 说明：直接粘贴 `docs/release-notes-v1.0.0.md` 的内容
+- 附件：上传 `whale-girl-patch-v1.0.0.zip`
+
+这个 ZIP 里包含 `install.cmd` / `uninstall.cmd` / `patch\` / `launcher\`（带「补丁」页的启动器）/ 教程，
+解压双击即可。发布前确认 `launcher/version.txt` 与当前适配的本体版本一致。
+
+## 5. 发布前检查
 
 ```powershell
 git status                 # 应该只有你主动改的文件
@@ -46,3 +74,4 @@ git tag -n
 - 不要提交 `data/`、`config.json`、API Key、聊天记录；`.gitignore` 已经忽略 `data/` 和 `*.log`。
 - 截图 `docs/patch-ui.png` 里不要出现真实聊天内容 / 路径；当前截图是测试数据。
 - 保持 `LICENSE`、`NOTICE.md` 原样；AGPL 要求分发修改版时提供完整源码。
+- 确认仓库根目录能看到 `install.cmd`、`README.md`、`docs/tutorial.md`。
