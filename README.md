@@ -10,6 +10,7 @@
 装好后启动器左侧会多一栏 **「补丁」**，网页控制台在 `http://127.0.0.1:8787/patch/`。
 
 > 视频介绍（B 站）：<https://www.bilibili.com/video/BV1bhWv6GEU2/>
+> 图片补丁视频（新项目）：<https://www.bilibili.com/video/BV18QWi62E4r/>
 
 ## 基础软件下载与安装（必读）
 

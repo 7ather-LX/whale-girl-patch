@@ -5,6 +5,9 @@
 > 必须先安装 **鲸鲸 / Whale Girl**：<https://github.com/Banan1cee/whale_girl>
 > 当前适配：**4.1.0**（最新版）。
 
+视频介绍（B站）：<https://www.bilibili.com/video/BV1bhWv6GEU2/>
+图片补丁视频（新项目）：<https://www.bilibili.com/video/BV18QWi62E4r/>
+
 ## 基础软件下载与安装（必读）
 
 1. 打开鲸鲸 Release 下载页：<https://github.com/Banan1cee/whale_girl/releases/latest>
