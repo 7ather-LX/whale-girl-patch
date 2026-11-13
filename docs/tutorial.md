@@ -24,9 +24,11 @@
 
 ## 1. 先装好基础软件（鲸鲸）
 
-1. 打开 <https://github.com/Banan1cee/whale_girl>；
-2. 按它的 README / Releases 安装鲸鲸（4.0.8.2 或 4.1.0）；
-3. 打开启动器，确认能：
+1. 打开鲸鲸 Release 下载页：<https://github.com/Banan1cee/whale_girl/releases/latest>
+   （项目主页：<https://github.com/Banan1cee/whale_girl>）；
+2. 下载 Windows 安装包（Release 里标注的 `setup.exe`）；
+3. 运行安装包，选择安装目录（例如 `D:\WhaleGirl`），**记住这个目录**——补丁要装到同一个目录；
+4. 打开启动器，确认能：
    - 正常启动（状态页没有红色报错）；
    - 配置好一个模型（DeepSeek / 智谱 / Ollama 都行）；
    - 登录微信、桥接在线。

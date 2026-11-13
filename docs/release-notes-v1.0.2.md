@@ -5,6 +5,18 @@
 > 必须先安装 **鲸鲸 / Whale Girl**：<https://github.com/Banan1cee/whale_girl>
 > 当前适配：**4.1.0**（最新版）。
 
+## 基础软件下载与安装（必读）
+
+1. 打开鲸鲸 Release 下载页：<https://github.com/Banan1cee/whale_girl/releases/latest>
+   （项目主页：<https://github.com/Banan1cee/whale_girl>）；
+2. 下载 Windows 安装包（Release 里标注的 `setup.exe`）；
+3. 运行安装包，选择安装目录（例如 `D:\WhaleGirl`）并记住它；
+4. 打开启动器：配置模型 Key / 免费模型，登录微信，确认能正常聊天；
+5. 再安装本补丁。
+
+> 当前补丁适配 **4.1.0**；4.0.8.2 请用 `v1.0.0` 的启动器构建。
+> 基础软件更新后，重新运行 `install.cmd` 即可恢复补丁。
+
 ## 这个版本做了什么
 
 - 启动器「补丁」页适配 **鲸鲸 4.1.0**；
