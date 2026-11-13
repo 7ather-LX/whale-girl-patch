@@ -64,14 +64,18 @@ install.cmd
    - 选**鲸鲸安装目录**，也就是包含 `server.js`、`src`、`runtime` 的那个文件夹；
    - 不要选补丁文件夹；
 4. 如果本体是 4.0.8.2 或 4.1.0，最后一步会给启动器加一栏「补丁」（替换前自动备份）；
-5. 看到 `Installed successfully.` 就成功了。
+5. 询问 `Create desktop shortcuts (install/update + patch console)? [Y/n]`：
+   - **Y**：桌面出现「鲸鲸补丁-安装或更新」「鲸鲸补丁-控制台」；
+   - **n**：不创建，以后按「没有快捷方式怎么更新」操作；
+6. 看到 `Installed successfully.` 就成功了。
 
 安装器实际做这些事：
 
 - 把 `patch\` 复制成 `鲸鲸目录\whale-patch\`；
 - 在 `鲸鲸目录\server.js` 第一行加 `require('./whale-patch').install();`；
 - 生成 `鲸鲸目录\data\whale-patch.json`；
-- （可选）把启动器换成带「补丁」页的版本，备份为 `WhaleLauncher.exe.whale-patch.bak`。
+- （可选）把启动器换成带「补丁」页的版本，备份为 `WhaleLauncher.exe.whale-patch.bak`；
+- （可选）创建桌面快捷方式，指向你解压补丁的目录。
 
 原 `server.js` 会备份为 `server.js.whale-patch.bak`。
 
@@ -214,6 +218,21 @@ https://www.bilibili.com/video/BV1GJ411x7h7
 - 如果新本体还没有对应的启动器构建，安装器会跳过启动器，网页控制台仍然可用。
 
 补丁版本与适配说明见 [docs/updates.md](updates.md)。
+
+### 有快捷方式
+
+双击桌面 **「鲸鲸补丁-安装或更新」** → 等 `Installed successfully` → 完全退出启动器再打开。
+
+### 没有快捷方式
+
+1. 打开 <https://github.com/7ather-LX/whale-girl-patch/releases/latest>；
+2. 下载最新 `whale-girl-patch-vX.Y.Z.zip`；
+3. 解压到固定目录（例如 `D:\WhaleGirlPatch`）；
+4. 双击解压目录里的 `install.cmd`；
+5. 完全退出启动器再打开 → 点「启动」。
+
+> 快捷方式指向你当初解压补丁的文件夹；删了它快捷方式就会失效。
+> 重新下载 ZIP 解压、运行 `install.cmd`，安装器会重新创建快捷方式。
 
 ---
 

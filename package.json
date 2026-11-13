@@ -1,6 +1,6 @@
 {
   "name": "whale-girl-patch",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "鲸鲸 / Whale Girl 的外挂补丁：跨聊天记忆共享 + 链接 / 视频阅读（AGPL-3.0-only）",
   "license": "AGPL-3.0-only",

@@ -108,6 +108,34 @@
 
 默认只启用「全部群聊」共享组，私聊组停用；想改就到管理页 / 启动器「补丁」页里勾选。
 
+### 桌面快捷方式（安装时可选）
+
+安装最后会问一句：
+
+```text
+Create desktop shortcuts (install/update + patch console)? [Y/n]
+```
+
+- 选 **Y**：创建
+  - `鲸鲸补丁-安装或更新` → 当前解压目录的 `install.cmd`
+  - `鲸鲸补丁-控制台` → `http://127.0.0.1:<端口>/patch/`
+- 选 **n**：不创建，仍可用解压目录里的 `install.cmd` 手动更新。
+
+> 快捷方式指向的是**你解压补丁的那个文件夹**。以后更新时不要删它；如果删了，
+> 重新下载最新 ZIP 解压即可，安装器会重新创建快捷方式。
+
+### 没有快捷方式时怎么更新
+
+不要去找“控制面板”或系统更新，按这个来：
+
+1. 打开 <https://github.com/7ather-LX/whale-girl-patch/releases/latest>；
+2. 下载最新的 `whale-girl-patch-vX.Y.Z.zip`；
+3. 解压到任意固定目录（例如 `D:\WhaleGirlPatch`）；
+4. 双击解压目录里的 `install.cmd`；
+5. 完全退出鲸鲸启动器，再打开 → 点「启动」。
+
+补丁配置、聊天记忆、共享组都在 `鲸鲸目录\data\` 里，更新不会丢。
+
 ### 命令行安装（可选）
 
 ```powershell
@@ -124,6 +152,16 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -AppRoot "D:\WhaleGirl" -
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -AppRoot "D:\WhaleGirl" -SkipLauncher
+```
+
+静默安装时指定是否创建桌面快捷方式：
+
+```powershell
+# 创建
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -AppRoot "D:\WhaleGirl" -CreateShortcuts
+
+# 不创建
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -AppRoot "D:\WhaleGirl" -NoShortcuts
 ```
 
 ### 手动安装（不想跑脚本）

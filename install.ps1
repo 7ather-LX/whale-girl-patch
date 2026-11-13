@@ -1,4 +1,4 @@
-# WhaleGirl patch installer (Windows PowerShell 5.1+ / PowerShell 7)
+﻿# WhaleGirl patch installer (Windows PowerShell 5.1+ / PowerShell 7)
 #
 # IMPORTANT: this is a PATCH, not a standalone application.
 # It only works after WhaleGirl / 鲸鲸 is installed:
@@ -19,7 +19,9 @@ param(
   [string]$AppRoot = "",
   [switch]$EnableAllShared,
   [switch]$NoBackup,
-  [switch]$SkipLauncher
+  [switch]$SkipLauncher,
+  [switch]$CreateShortcuts,
+  [switch]$NoShortcuts
 )
 
 $ErrorActionPreference = "Stop"
@@ -97,6 +99,35 @@ function Pick-AppRoot {
   } catch {
     return ""
   }
+}
+
+function New-Shortcuts([int]$Port) {
+  $created = @()
+  try {
+    $desktop = [Environment]::GetFolderPath("Desktop")
+    if (-not $desktop -or -not (Test-Path $desktop)) { return $created }
+    $shell = New-Object -ComObject WScript.Shell
+
+    $installer = Join-Path $PSScriptRoot "install.cmd"
+    if (Test-Path $installer) {
+      $lnkPath = Join-Path $desktop "鲸鲸补丁-安装或更新.lnk"
+      $lnk = $shell.CreateShortcut($lnkPath)
+      $lnk.TargetPath = $installer
+      $lnk.WorkingDirectory = $PSScriptRoot
+      $lnk.Description = "安装/更新鲸鲸补丁（先装 WhaleGirl 本体）"
+      $lnk.Save()
+      $created += $lnkPath
+    }
+
+    $urlPath = Join-Path $desktop "鲸鲸补丁-控制台.url"
+    $url = $shell.CreateShortcut($urlPath)
+    $url.TargetPath = "http://127.0.0.1:$Port/patch/"
+    $url.Save()
+    $created += $urlPath
+  } catch {
+    Info "could not create desktop shortcuts: $($_.Exception.Message)"
+  }
+  return $created
 }
 
 Write-Host ""
@@ -260,6 +291,23 @@ $portFile = Join-Path $AppRoot "data\server-port.txt"
 if (Test-Path $portFile) {
   $rawPort = (Get-Content $portFile -Raw).Trim()
   if ($rawPort -match '^\d+$') { $port = $rawPort }
+}
+
+if (-not $NoShortcuts -and -not $CreateShortcuts) {
+  $answer = Read-Host "Create desktop shortcuts (install/update + patch console)? [Y/n]"
+  if ($answer -notmatch '^\s*[nN]') { $CreateShortcuts = $true }
+}
+if ($CreateShortcuts) {
+  $made = New-Shortcuts -Port ([int]$port)
+  if ($made.Count -gt 0) {
+    Info "desktop shortcuts:"
+    foreach ($m in $made) { Info "  $m" }
+  }
+} else {
+  Info "desktop shortcuts skipped."
+  Info "Update without a shortcut: download the latest ZIP from"
+  Info "  https://github.com/7ather-LX/whale-girl-patch/releases/latest"
+  Info "extract it, then double-click install.cmd in the extracted folder."
 }
 
 Write-Host ""
