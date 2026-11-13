@@ -153,6 +153,12 @@ https://www.bilibili.com/video/BV1GJ411x7h7
 
 ## 5. 常见问题
 
+### 双击后 Windows 提示「未知发布者 / 已保护你的电脑」
+
+- 这个补丁是第三方开源补丁，没有商业代码签名；
+- 点「更多信息」→「仍要运行」；
+- 不放心可以先看仓库源码：`install.ps1`、`patch\`、`launcher\launcher.patch` 都是明文。
+
 ### 打开 `/patch/` 是 404
 
 - 没有重启鲸鲸 → 停止 → 启动；
