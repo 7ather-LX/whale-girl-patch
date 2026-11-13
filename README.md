@@ -93,7 +93,7 @@
 
 > 关于 4.1 的「社区插件」：插件市场目前面向 WebAssembly 工具 / 人设包，不能改记忆管线或
 > `links.describeLink`，所以本补丁仍是服务端外挂 + 可选启动器页；等官方开放相应接口再迁移。
-> 详见 [docs/updates.md](docs/updates.md)。
+> 具体缺哪些扩展点、插件化后的形态，见 [docs/plugin-market-proposal.md](docs/plugin-market-proposal.md)。
 
 ---
 
