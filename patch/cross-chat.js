@@ -78,6 +78,38 @@ function parse(text) {
   return { target: generic ? '群里' : target, generic, message };
 }
 
+function targetId(raw) {
+  return String(raw || '')
+    .trim()
+    .replace(/^wechat:(?:g:|group:)?/i, '')
+    .replace(/^wechat:/i, '');
+}
+
+function looseParse(runtime, text) {
+  const s = String(text || '').replace(/\r/g, '').trim();
+  if (!s || s.length > 1000) return null;
+  if (!/(?:发|通知|转告|带话|喊)/.test(s)) return null;
+  const groups = groupCandidates(runtime);
+  let target = groups.find((g) => g.title && s.includes(g.title)) || null;
+  let generic = false;
+  if (!target && /群里|群聊|群里面/.test(s) && groups.length === 1) {
+    target = groups[0];
+    generic = true;
+  }
+  if (!target) return null;
+  if (!colon && /[吗么呢？?]\s*$/.test(s)) return null;
+  if (/(?:发现|发生|发布)/.test(s) && !colon) return null;
+  let message = '';
+  const colon = s.match(/[：:]\s*([\s\S]+)$/);
+  if (colon) {
+    message = colon[1];
+  } else {
+    const m = s.match(/(?:发|通知|转告|带话|喊)(?:一个|一条|一下|个|条)?\s*([\s\S]*)$/);
+    if (m) message = m[1];
+  }
+  return { target: target.title, generic, message: cleanMessage(message) };
+}
+
 function groupCandidates(runtime) {
   const out = [];
   const seen = new Set();
@@ -86,7 +118,7 @@ function groupCandidates(runtime) {
     if (chats && typeof chats.values === 'function') {
       for (const chat of chats.values()) {
         if (!chat || chat.chatType !== 'group') continue;
-        const id = String(chat.chatId || '');
+        const id = targetId(chat.chatId);
         if (!id || seen.has(id)) continue;
         seen.add(id);
         out.push({ id, title: String(chat.title || id), isGroup: true });
@@ -97,7 +129,7 @@ function groupCandidates(runtime) {
     const items = (runtime.contacts && Array.isArray(runtime.contacts.items)) ? runtime.contacts.items : [];
     for (const item of items) {
       if (!item || !item.isGroup) continue;
-      const id = String(item.wxid || '');
+      const id = targetId(item.wxid);
       if (!id || seen.has(id)) continue;
       seen.add(id);
       out.push({ id, title: String(item.name || item.remark || id), isGroup: true });
@@ -145,7 +177,8 @@ function rateOk(config, chatId) {
 function handle(runtime, msg) {
   if (!runtime || !msg || msg.platform !== 'wechat') return null;
   if (msg.chatType !== 'private') return null;
-  const parsed = parse(msg.text || msg.cleanText || '');
+  const text = msg.text || msg.cleanText || '';
+  const parsed = parse(text) || looseParse(runtime, text);
   if (!parsed) return null;
 
   const cfg = require('./config').load(runtime.config.root || process.cwd()).config;
@@ -173,6 +206,7 @@ function handle(runtime, msg) {
   if (!rateOk(cfg, msg.chatId)) return { reply: '跨聊天发消息有点频繁，歇一会儿再试。' };
 
   if (!parsed.message) {
+    runtime.logger?.info?.(`[cross-chat] no-content target=${parsed.target}`);
     return {
       reply: parsed.generic
         ? '要在哪个群、发什么内容？可以说「在『群名』里发：内容」。'
@@ -181,7 +215,10 @@ function handle(runtime, msg) {
   }
 
   const found = resolveTarget(runtime, parsed.target, parsed.generic);
-  if (!found.chat) return { reply: found.error };
+  if (!found.chat) {
+    runtime.logger?.info?.(`[cross-chat] target-not-found target=${parsed.target} generic=${parsed.generic}`);
+    return { reply: found.error };
+  }
   if (!runtime.reminders || typeof runtime.reminders.enqueueNow !== 'function') {
     return { reply: '这台机器上的主动发送队列还没准备好，等一下再试。' };
   }
