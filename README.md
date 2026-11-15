@@ -6,7 +6,10 @@
 > **<https://github.com/Banan1cee/whale_girl>**（Windows，4.1.2）。
 > 补丁不自带模型、不自带微信自动化、没有独立界面；它只给已经装好的鲸鲸加两个能力。
 
-**一句话**：让鲸鲸在指定聊天之间记忆互通，并且能点开群友发的 B 站 / 小黑盒 / 网页链接看内容；
+> **最新版：v1.0.5** · [Release](https://github.com/7ather-LX/whale-girl-patch/releases/tag/v1.0.5) · 适配鲸鲸 4.1.2
+
+**一句话**：让鲸鲸在指定聊天之间记忆互通，主人在私聊里可以让她去另一个群发指定消息，
+并且能点开群友发的 B 站 / 小黑盒 / 网页链接看内容；
 装好后启动器左侧会多一栏 **「补丁」**，网页控制台在 `http://127.0.0.1:8787/patch/`。
 
 > 视频介绍（B 站）：<https://www.bilibili.com/video/BV1bhWv6GEU2/>
