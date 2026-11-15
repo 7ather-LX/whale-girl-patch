@@ -56,7 +56,7 @@ function Find-AppRoot {
   try {
     $proc = Get-Process WhaleLauncher -ErrorAction Stop | Select-Object -First 1
     if ($proc -and $proc.Path) { $list.Add((Split-Path -Parent $proc.Path)) }
-  } catch { /* ignore */ }
+  } catch { }
 
   # 3) uninstall registry entries
   foreach ($reg in @(
@@ -67,7 +67,7 @@ function Find-AppRoot {
       Get-ItemProperty $reg -ErrorAction SilentlyContinue |
         Where-Object { $_.DisplayName -match "Whale|鲸鲸" -and $_.InstallLocation } |
         ForEach-Object { $list.Add([string]$_.InstallLocation) }
-    } catch { /* ignore */ }
+    } catch { }
   }
 
   # 4) common install locations
@@ -133,7 +133,7 @@ function New-Shortcuts([int]$Port) {
 Write-Host ""
 Write-Host "WhaleGirl patch installer" -ForegroundColor Cyan
 Write-Host "  This is a PATCH. It cannot run on its own." -ForegroundColor Yellow
-Write-Host "  Base software: WhaleGirl 4.0.x / 4.1.0"
+Write-Host "  Base software: WhaleGirl 4.1.2"
 Write-Host "  https://github.com/Banan1cee/whale_girl"
 Write-Host ""
 
