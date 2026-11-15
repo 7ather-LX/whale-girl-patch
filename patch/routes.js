@@ -157,6 +157,7 @@ function register(router, runtime, ctx) {
       if (body && typeof body.enabled === 'boolean') partial.enabled = body.enabled;
       if (body && body.sharedMemory && typeof body.sharedMemory === 'object') partial.sharedMemory = body.sharedMemory;
       if (body && body.links && typeof body.links === 'object') partial.links = body.links;
+      if (body && body.crossChat && typeof body.crossChat === 'object') partial.crossChat = body.crossChat;
       if (!Object.keys(partial).length) return json(res, 400, { ok: false, error: '没有要保存的内容' });
       const state = configModule.patch(root, partial);
       reader.clearCache();

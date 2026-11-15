@@ -88,6 +88,29 @@
       </div>
     </section>
 
+    <section class="card" id="cross-card">
+      <div class="card-head">
+        <h2>跨聊天操作</h2>
+        <label class="switch">
+          <input type="checkbox" id="cross-enabled">
+          <span>总开关</span>
+        </label>
+      </div>
+      <p class="hint">
+        绑定主人 wxid 后，可以在私聊里说「在『群名』里发：内容」，或者「给『群名』发一条：内容」。
+        鲸鲸会把消息排进主动发送队列，由桥接发到指定群，不需要你切到那个群。
+        只允许主人绑定 ID 操作，昵称相同不算。
+      </p>
+      <div class="row">
+        <label class="field small">
+          <span>每个私聊每小时最多发几条</span>
+          <input type="number" id="cross-max-hour" min="1" max="100" step="1">
+        </label>
+        <button class="btn" id="cross-save">保存跨聊天设置</button>
+      </div>
+      <p class="hint small">群名要能在「联系人缓存」或已有聊天记录里找到；找不到先在微信里打开那个群说句话。</p>
+    </section>
+
     <section class="card" id="links-card">
       <div class="card-head">
         <h2>链接阅读</h2>

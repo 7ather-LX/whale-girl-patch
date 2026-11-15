@@ -95,6 +95,7 @@ function renderStatus() {
   };
   add('补丁版本', `v${(state.status && state.status.patch && state.status.patch.version) || '?'}`, true);
   add('跨聊天记忆', cfg.sharedMemory.enabled ? '开' : '关', cfg.sharedMemory.enabled);
+  add('跨聊天操作', cfg.crossChat && cfg.crossChat.enabled ? '开' : '关', Boolean(cfg.crossChat && cfg.crossChat.enabled));
   add('链接阅读', cfg.links.enabled ? '开' : '关', cfg.links.enabled);
   add('无头浏览器', diag && diag.browser ? diag.browser.name : '未找到', Boolean(diag && diag.browser));
   add('看图模型', diag && diag.vision && diag.vision.configured ? diag.vision.model : '未配置',
@@ -401,6 +402,34 @@ async function previewShared() {
   }
 }
 
+/* ------------------------------ 跨聊天操作 ------------------------------ */
+
+function fillCrossForm() {
+  const cc = state.config.crossChat || { enabled: true, maxPerHour: 10 };
+  $('cross-enabled').checked = cc.enabled !== false;
+  $('cross-max-hour').value = cc.maxPerHour || 10;
+}
+
+async function saveCross() {
+  try {
+    const res = await api('/api/patch/config', {
+      method: 'POST',
+      body: JSON.stringify({
+        crossChat: {
+          enabled: $('cross-enabled').checked,
+          maxPerHour: Number($('cross-max-hour').value) || 10,
+        },
+      }),
+    });
+    state.config = res.config;
+    fillCrossForm();
+    renderStatus();
+    toast('跨聊天设置已保存');
+  } catch (err) {
+    toast('保存失败：' + err.message, 'err');
+  }
+}
+
 /* ------------------------------ 链接 ------------------------------ */
 
 function fillLinksForm() {
@@ -498,6 +527,7 @@ async function load() {
     state.chats = res.chats || [];
     fillSharedForm();
     fillLinksForm();
+    fillCrossForm();
     renderPreviewOptions();
     renderStatus();
     renderDiag();
@@ -516,6 +546,7 @@ function bind() {
   $('scope-privates').addEventListener('click', () => addScopeWithChats('全部私聊（自动，确认隐私后启用）', ['*'], false, 'private'));
   $('preview-run').addEventListener('click', previewShared);
   $('links-save').addEventListener('click', saveLinks);
+  $('cross-save').addEventListener('click', saveCross);
   $('test-run').addEventListener('click', testLink);
   $('cache-clear').addEventListener('click', async () => {
     try {

@@ -17,6 +17,7 @@ const path = require('node:path');
 const versionInfo = require('./version');
 const configModule = require('./config');
 const shared = require('./shared-memory');
+const crossChat = require('./cross-chat');
 const reader = require('./link/reader');
 const browser = require('./link/browser');
 
@@ -170,7 +171,9 @@ function patchRuntime(root) {
       const browserInfo = browser.findBrowser(state.config.links);
       log('info', `🐋 补丁 ${versionInfo.version} 已加载：共享记忆${state.config.sharedMemory.enabled ? '开' : '关'}`
         + ` · 链接阅读${state.config.links.enabled ? '开' : '关'}`
+        + ` · 跨聊天${state.config.crossChat.enabled ? '开' : '关'}`
         + ` · 无头浏览器${browserInfo ? '：' + browserInfo.name : '不可用'}`);
+      crossChat.install(runtime);
       try {
         const removed = browser.sweep(rootRef, 3);
         if (removed) log('info', `补丁清理了 ${removed} 个旧的浏览器临时目录`);

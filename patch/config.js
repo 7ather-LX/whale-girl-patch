@@ -52,6 +52,11 @@ const DEFAULTS = Object.freeze({
     maxVisionImages: 3,
     maxBytes: 1200000,
   },
+  // 主人在私聊里让鲸鲸去别的群发指定消息
+  crossChat: {
+    enabled: true,
+    maxPerHour: 10,
+  },
 });
 
 const MODES = new Set(['summary', 'recent', 'both']);
@@ -175,6 +180,10 @@ function normalize(raw) {
   out.links.videoVision = bool(lk.videoVision, true);
   out.links.maxVisionImages = intIn(lk.maxVisionImages, 0, 5, 3);
   out.links.maxBytes = intIn(lk.maxBytes, 100 * 1024, 3 * 1024 * 1024, 1200000);
+
+  const cc = isPlainObject(src.crossChat) ? src.crossChat : {};
+  out.crossChat.enabled = bool(cc.enabled, true);
+  out.crossChat.maxPerHour = intIn(cc.maxPerHour, 1, 100, 10);
   return out;
 }
 
@@ -259,6 +268,7 @@ function patch(root, partial) {
     if (Object.prototype.hasOwnProperty.call(partial, 'enabled')) next.enabled = partial.enabled;
     if (isPlainObject(partial.sharedMemory)) next.sharedMemory = { ...cur.sharedMemory, ...partial.sharedMemory };
     if (isPlainObject(partial.links)) next.links = { ...cur.links, ...partial.links };
+    if (isPlainObject(partial.crossChat)) next.crossChat = { ...cur.crossChat, ...partial.crossChat };
   }
   return save(root, next);
 }
