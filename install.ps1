@@ -314,8 +314,8 @@ Write-Host ""
 Write-Host "Installed successfully." -ForegroundColor Green
 Write-Host ""
 Write-Host "  Last step: FULLY EXIT the WhaleGirl launcher (tray icon -> Exit), then open it again." -ForegroundColor Yellow
-Write-Host "  A normal 'Restart' only restarts the kernel; the new 'Patch' tab needs a launcher restart."
-Write-Host "  Then open:  http://127.0.0.1:$port/patch/"
+Write-Host "  The patch is served by the kernel; use the browser console below."
+Write-Host "  Then open in browser: http://127.0.0.1:$port/patch/"
 Write-Host ""
 Write-Host "  Self-check: `"$node`" `"$(Join-Path $dstPatch 'cli.js')`" doctor"
 Write-Host "  Uninstall : double-click uninstall.cmd (or uninstall.ps1 -AppRoot `"$AppRoot`")"
