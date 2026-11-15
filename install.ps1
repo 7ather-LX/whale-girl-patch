@@ -236,13 +236,14 @@ console.log('shared memory: enabled, all groups');
 }
 
 Step "6/6 Install launcher tab (optional)"
-$launcherSrc = Join-Path $PSScriptRoot "launcher\WhaleLauncher.exe"
+$launcherSrcDir = Join-Path $PSScriptRoot "launcher\files"
+$launcherSrc = Join-Path $launcherSrcDir "WhaleLauncher.exe"
 $launcherVerFile = Join-Path $PSScriptRoot "launcher\version.txt"
 $launcherDst = Join-Path $AppRoot "WhaleLauncher.exe"
 if ($SkipLauncher) {
   Info "skipped by -SkipLauncher (web console still available at /patch/)"
 } elseif (-not (Test-Path $launcherSrc)) {
-  Info "launcher\WhaleLauncher.exe not found (source checkout?) - using web console only"
+  Info "launcher\files not found - using web console only"
 } elseif (-not (Test-Path $launcherDst)) {
   Info "WhaleLauncher.exe not found in app - using web console only"
 } else {
@@ -250,7 +251,6 @@ if ($SkipLauncher) {
   if (Test-Path $launcherVerFile) { $launcherVer = (Get-Content $launcherVerFile -Raw).Trim() }
   if ($launcherVer -and $launcherVer -ne [string]$pkg.version) {
     Info "launcher tab build is for $launcherVer, base is $($pkg.version) - skipped (web console still works)"
-    Info "after the base updates, re-run install.cmd when a matching launcher build is released"
   } else {
     $launcherBackup = "$launcherDst.whale-patch.bak"
     $launcherMarker = "$launcherDst.whale-patch.installed"
@@ -260,12 +260,17 @@ if ($SkipLauncher) {
       try { Copy-Item $launcherDst $launcherBackup -Force -ErrorAction Stop; Info "launcher backup: $launcherBackup" }
       catch { Info "could not back up launcher: $($_.Exception.Message)" }
     }
+    Get-ChildItem $launcherSrcDir -Recurse -File | Where-Object { $_.Name -ne "WhaleLauncher.exe" } | ForEach-Object {
+      $rel = $_.FullName.Substring($launcherSrcDir.Length).TrimStart('\')
+      $target = Join-Path $AppRoot $rel
+      New-Item -ItemType Directory -Force -Path (Split-Path -Parent $target) | Out-Null
+      try { Copy-Item $_.FullName $target -Force } catch { }
+    }
     $installed = $false
     try {
       Copy-Item $launcherSrc $launcherDst -Force -ErrorAction Stop
       $installed = $true
     } catch {
-      # 启动器正在运行：Windows 不允许覆盖，但允许改名。改名后放新文件，下次启动生效。
       $stamp = [DateTime]::Now.ToString("yyyyMMddHHmmss")
       $oldPath = Join-Path (Split-Path -Parent $launcherDst) ("WhaleLauncher.exe.old-" + $stamp)
       Info "launcher is locked; trying rename -> $oldPath"
@@ -276,7 +281,6 @@ if ($SkipLauncher) {
         Info "launcher replaced; old file: $oldPath"
       } catch {
         Info "launcher not replaced: $($_.Exception.Message)"
-        Info "close WhaleGirl completely and run install.cmd again to enable the tab"
       }
     }
     if ($installed) {

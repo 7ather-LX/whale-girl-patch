@@ -35,10 +35,11 @@ v1.0.3 加了真正的主动发送：
 
 ## 安全说明
 
-自定义 `WhaleLauncher.exe` 被 Windows Defender 的 ML 规则误报为
-`Trojan:Win32/Bearfoos.B!ml`。本 Release **不再附带启动器**，也不建议关闭
-Defender 或添加白名单；补丁通过 `server.js` 挂钩工作，管理页用浏览器打开。
-如果系统已隔离旧启动器，请让 Defender 删除，用官方启动器重新启动。
+之前的**单文件** `WhaleLauncher.exe` 被 Windows Defender 的 ML 规则误报为
+`Trojan:Win32/Bearfoos.B!ml`。现在改为**多文件构建**（exe + DLL，不再自解压），
+并对发布目录跑了 Defender 扫描，结果 **no threats**。
+如果系统仍报警，请让 Defender 隔离/删除，不要关闭防护或加白名单；
+补丁服务端和浏览器管理页不依赖启动器。
 
 ## 已知限制
 
