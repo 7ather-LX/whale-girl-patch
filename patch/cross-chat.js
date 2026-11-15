@@ -33,19 +33,39 @@ function cleanTarget(s) {
     .slice(0, 40);
 }
 
+function cleanMessage(raw) {
+  let m = stripQuotes(raw).replace(/^[，,：:\s]+/, '').trim();
+  // 「发哈，现在发」这类只是催，不是内容
+  m = m.replace(/^(?:哈|啊|吧|呀|哦|嗯|呐|嘛)[，,。.!！\s]*/, '').trim();
+  if (/^(?:现在|马上|立刻|再|重新)?(?:发|说|试试|看看|发吧|发哈|发一下|发一个)[吧哈啊呀了\s，,。.!！]*$/.test(m)) return '';
+  if (/^(?:给|让|叫).{0,14}(?:看看|瞧瞧|知道|通知)[了吧哈啊呀\s]*$/.test(m)) return '';
+  // 「把这张图片发群里给群友看看」是转发图片，不是文本；当前队列只发文字，先问清楚。
+  if (/(?:图片|照片|这张图|截图)/.test(m) && /(?:发|给|看看|转发|群友)/.test(m)) return '';
+  return m.slice(0, 800);
+}
+
 function parse(text) {
-  const s = String(text || '').replace(/\r/g, '').trim();
-  if (!s || s.length > 1000) return null;
-  // 在「群名」里发：内容 / 给 群名 发一条：内容 / 去群名群说：内容
-  const m = s.match(
-    /^(?:请|麻烦|帮我|帮忙)?\s*(?:在|去|到|给|向|让|叫|通知|告诉)\s*[「『“"']?(.{1,40}?)[」』”"']?\s*(?:那个|这个)?(?:群|群里|群里面|里|那边)?\s*(?:发一条|发个|发一句|发|说|通知|告诉|转告|转达|带话|带句话|喊)\s*[:：，,]?\s*([\s\S]+)$/
+  const raw = String(text || '').replace(/\r/g, '').trim();
+  if (!raw || raw.length > 1000) return null;
+  // 去掉「那 / 宝子 / 你」这类口语开头，但不改后面的群名
+  const s = raw.replace(/^(?:(?:那|好|嗯|行|可以|宝子|宝宝|亲爱的|你|鲸鲸|小鲸鲸|帮我|帮忙|请|麻烦|记得|要|给我|快|赶紧)[，,、\s]*)+/, '').trim();
+
+  // 1) 在「群名」里发：内容 / 给 群名 发一条：内容
+  let m = s.match(
+    /^(?:你|鲸鲸|小鲸鲸)?\s*(?:在|去|到|给|向|让|叫|通知|告诉)\s*[「『“"']?(.{1,40}?)[」』”"']?\s*(?:那个|这个)?(?:群|群里|群里面|里|那边)?\s*(?:发一个|发一下|发一条|发个|发一句|发|说|通知|告诉|转告|转达|带话|带句话|喊)\s*[:：，,]?\s*([\s\S]*)$/
   );
+  if (!m) {
+    // 2) 发群里：内容 / 发到群名：内容
+    m = s.match(
+      /^(?:你|鲸鲸|小鲸鲸)?\s*发\s*(?:到|在|去|进)?\s*[「『“"']?(.{0,40}?)[」』”"']?\s*(?:那个|这个)?(?:群|群里|群里面|里|那边)?\s*(?:发一个|发一下|发一条|发个|发一句)?\s*[:：，,]?\s*([\s\S]*)$/
+    );
+  }
   if (!m) return null;
   const target = cleanTarget(m[1]);
-  const message = stripQuotes(m[2]).trim();
-  if (!target || !message) return null;
-  if (/^(?:群|群里|群里面|这里|这里群|本群|当前群|这个群|那个群)$/.test(target)) return null;
-  return { target, message: message.slice(0, 800) };
+  const message = cleanMessage(m[2] || '');
+  if (!target && !message) return null;
+  const generic = !target || /^(?:群|群里|群聊|群里面|这里|这里群|本群|当前群|这个群|那个群)$/.test(target);
+  return { target: generic ? '群里' : target, generic, message };
 }
 
 function groupCandidates(runtime) {
@@ -76,8 +96,16 @@ function groupCandidates(runtime) {
   return out;
 }
 
-function resolveTarget(runtime, target) {
+function resolveTarget(runtime, target, generic = false) {
   const groups = groupCandidates(runtime);
+  if (generic) {
+    if (groups.length === 1) return { chat: groups[0] };
+    if (!groups.length) return { error: '我还没认识任何群。先在微信里打开那个群说句话，再试一次。' };
+    return {
+      error: `你说的是「群里」，但现在有 ${groups.length} 个群：${groups.slice(0, 6).map((g) => `「${g.title}」`).join('、')}。请说具体群名。`,
+      candidates: groups.slice(0, 6),
+    };
+  }
   const want = target.toLowerCase();
   const exact = groups.filter((g) => g.id.toLowerCase() === want || g.title.toLowerCase() === want);
   if (exact.length === 1) return { chat: exact[0] };
@@ -134,7 +162,15 @@ function handle(runtime, msg) {
 
   if (!rateOk(cfg, msg.chatId)) return { reply: '跨聊天发消息有点频繁，歇一会儿再试。' };
 
-  const found = resolveTarget(runtime, parsed.target);
+  if (!parsed.message) {
+    return {
+      reply: parsed.generic
+        ? '要在哪个群、发什么内容？可以说「在『群名』里发：内容」。'
+        : `要在「${parsed.target}」发什么内容？直接说「在『${parsed.target}』里发：内容」。`,
+    };
+  }
+
+  const found = resolveTarget(runtime, parsed.target, parsed.generic);
   if (!found.chat) return { reply: found.error };
   if (!runtime.reminders || typeof runtime.reminders.enqueueNow !== 'function') {
     return { reply: '这台机器上的主动发送队列还没准备好，等一下再试。' };
