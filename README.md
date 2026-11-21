@@ -3,10 +3,10 @@
 > [!IMPORTANT]
 > **这不是独立软件，单独下载本仓库没有任何作用。**
 > 本仓库是 [鲸鲸 / Whale Girl](https://github.com/Banan1cee/whale_girl) 的外挂补丁，必须先安装基础软件：
-> **<https://github.com/Banan1cee/whale_girl>**（Windows，4.1.2）。
+> **<https://github.com/Banan1cee/whale_girl>**（Windows，4.1.7.1）。
 > 补丁不自带模型、不自带微信自动化、没有独立界面；它只给已经装好的鲸鲸加两个能力。
 
-> **最新版：v1.0.5** · [Release](https://github.com/7ather-LX/whale-girl-patch/releases/tag/v1.0.5) · 适配鲸鲸 4.1.2
+> **最新版：v1.0.6** · [Release](https://github.com/7ather-LX/whale-girl-patch/releases/tag/v1.0.6) · 适配鲸鲸 4.1.7.1
 
 **一句话**：让鲸鲸在指定聊天之间记忆互通，主人在私聊里可以让她去另一个群发指定消息，
 并且能点开群友发的 B 站 / 小黑盒 / 网页链接看内容；
@@ -31,13 +31,13 @@
    - 确认基础软件本身能正常聊天；
 5. 再回来安装本补丁（下面 3 步）。
 
-> 当前补丁适配基础软件 **4.1.2**；4.0.8.2 请使用 `v1.0.0` 的启动器构建。
+> 当前补丁适配基础软件 **4.1.7.1**；4.0.8.2 请使用 `v1.0.0` 的启动器构建。
 > 启动器使用**多文件构建**（exe + DLL，非单文件自解压），已通过 Defender 扫描；如果系统仍报警，请让 Defender 隔离/删除，不要关闭防护。
 > 基础软件以后更新，重新运行 `install.cmd` 即可恢复补丁，详见 [docs/updates.md](docs/updates.md)。
 
 ## 30 秒安装（3 步）
 
-1. **先装基础软件**：从 <https://github.com/Banan1cee/whale_girl> 安装鲸鲸（当前推荐 4.1.2），确认能从启动器正常启动、登录微信。
+1. **先装基础软件**：从 <https://github.com/Banan1cee/whale_girl> 安装鲸鲸（当前推荐 4.1.7.1），确认能从启动器正常启动、登录微信。
 2. **装补丁**：下载本仓库 ZIP → 解压 → 双击 `install.cmd`。
    安装器会自动找鲸鲸目录；找不到会弹窗让你选——选**包含 `server.js` 的那个文件夹**（不是补丁文件夹）。
 3. **重启并打开**：**完全退出启动器**（托盘图标右键退出）再打开；左侧 **「补丁」** 栏应该出现，也可以直接打开 <http://127.0.0.1:8787/patch/>。
@@ -52,7 +52,7 @@
 | 是 | 不是 |
 | --- | --- |
 | 鲸鲸的**外挂补丁**，给已安装的鲸鲸加功能 | ❌ 不能单独运行的软件 |
-| 给鲸鲸加服务端补丁 + 启动器「补丁」栏（本体 4.1.2） | ❌ 不会替换/重装鲸鲸本体 |
+| 给鲸鲸加服务端补丁 + 启动器「补丁」栏（本体 4.1.7.1） | ❌ 不会替换/重装鲸鲸本体 |
 | 只改 `server.js` 第一行，其余代码原样保留 | ❌ 不需要再装 Node、Python、数据库 |
 | 零 npm 依赖，用鲸鲸自带的 Node / Python | ❌ 不是云服务，不上传聊天记录 |
 | 管理页只在本机 `127.0.0.1` 访问 | ❌ 不暴露公网 |
@@ -127,7 +127,7 @@
 ### 前置条件
 
 - Windows 10/11；
-- 已安装鲸鲸 4.1.2（安装目录里能看到 `server.js`、`src\`、`runtime\`）：
+- 已安装鲸鲸 4.1.7.1（安装目录里能看到 `server.js`、`src\`、`runtime\`）：
   **<https://github.com/Banan1cee/whale_girl>**；
 - 小黑盒这类动态页需要系统里有 **Microsoft Edge**（Win10/11 自带）或 Chrome；
 - 想让链接「看视频画面」，需要在鲸鲸里配好**看图模型**的 Key（默认智谱 `glm-4.6v-flash` 有免费额度）。
@@ -143,7 +143,7 @@
 安装器会备份 `server.js`（`server.js.whale-patch.bak`），然后复制补丁、加一行挂钩、做语法检查、生成配置。
 重复运行 `install.cmd` 就是更新补丁，不会重复加挂钩。
 
-如果本体是 **4.1.2**，安装器会复制多文件启动器并加 **「补丁」** 栏（替换前备份 `WhaleLauncher.exe.whale-patch.bak`）。
+如果本体是 **4.1.7.1**，安装器会复制多文件启动器并加 **「补丁」** 栏（替换前备份 `WhaleLauncher.exe.whale-patch.bak`）。
 
 > 本体更新后，`server.js` 的挂钩和启动器可能被官方覆盖：**重新运行一次 `install.cmd`** 即可，
 > 补丁配置和聊天记忆不会丢。详见 [docs/updates.md](docs/updates.md)。
